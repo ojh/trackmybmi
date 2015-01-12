@@ -19,7 +19,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 SECRET_KEY = os.environ.get('TRACKMYBMI_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('TRACKMYBMI_DEBUG', 'on') == 'on'
+DEBUG = os.environ.get('TRACKMYBMI_DEBUG', 'off') == 'on'
 TEMPLATE_DEBUG = os.environ.get('TRACKMYBMI_TEMPLATE_DEBUG') == 'on' or DEBUG
 
 ALLOWED_HOSTS = os.environ.get('TRACKMYBMI_ALLOWED_HOSTS', 'localhost'
