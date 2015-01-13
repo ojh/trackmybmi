@@ -3,3 +3,6 @@ Markdown==2.5.2
 django-filter==0.9.1
 djangorestframework==3.0.3
 psycopg2==2.5.4
+py==1.4.26
+pytest==2.6.4
+pytest-django==2.7.0
