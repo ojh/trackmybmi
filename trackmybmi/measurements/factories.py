@@ -13,3 +13,5 @@ class MeasurementFactory(factory.django.DjangoModelFactory):
 
     user = factory.SubFactory(UserFactory)
     date = datetime.date.today()
+    height = 1.63
+    weight = 58.5
