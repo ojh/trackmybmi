@@ -1,6 +1,6 @@
 import datetime
 
-from django.core.exceptions import ValidationError
+from django.db.utils import IntegrityError
 from django.test import TestCase
 
 from measurements.factories import MeasurementFactory
@@ -19,9 +19,8 @@ class MeasurementTest(TestCase):
         user = UserFactory(email='test@test.test')
         date = datetime.date(2015, 1, 1)
         measurement = MeasurementFactory(user=user, date=date)
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(IntegrityError):
             same_user_same_day = MeasurementFactory(user=user, date=date)
-            same_user_same_day.full_clean()
 
     def test_calculate_bmi(self):
         measurement = MeasurementFactory(height=1.74, weight=65.0)
