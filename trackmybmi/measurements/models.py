@@ -19,6 +19,9 @@ class Measurement(models.Model):
     weight = models.DecimalField(max_digits=5, decimal_places=2,
                                  help_text="Mass in kilograms")
 
+    class Meta:
+        unique_together = (('user', 'date'),)
+
     def __str__(self):
         return "{} - {}".format(self.user.email, self.date.strftime('%Y-%m-%d'))
 
