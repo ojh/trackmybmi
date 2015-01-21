@@ -1,0 +1,9 @@
+[run]
+
+source = .
+
+branch = True
+
+omit =
+    manage.py
+    trackmybmi/wsgi.py
