@@ -38,6 +38,7 @@ INSTALLED_APPS = (
     'custom_user',
     'users',
     'measurements',
+    'api',
 )
 
 AUTH_USER_MODEL = 'users.User'

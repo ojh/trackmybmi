@@ -3,8 +3,7 @@ from django.contrib import admin
 
 from rest_framework.routers import DefaultRouter
 
-from measurements.views import MeasurementViewSet
-from users.views import UserViewSet
+from api.views import MeasurementViewSet, UserViewSet
 
 
 router = DefaultRouter()
