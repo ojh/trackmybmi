@@ -1,7 +1,7 @@
 import datetime
 
 from django.core.urlresolvers import reverse
-from rest_framework import status
+from rest_framework import serializers, status
 from rest_framework.test import APITestCase
 
 from measurements.factories import MeasurementFactory
@@ -35,6 +35,25 @@ class MeasurementAPITest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         self.assertEqual(response.data['user'], self.user.email)
+
+
+    def test_measurement_date_and_user_are_unique_together(self):
+        data = {
+            'date': '2015-01-19',
+            'height': 1.74,
+            'weight': 75.00,
+        }
+
+        url = reverse('measurement-list')
+
+        self.client.force_authenticate(user=self.user)
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        error_msg = ("Users may only log a single measurement "
+                     "against any given date.")
+
+        self.assertIn(error_msg, response.data['non_field_errors'])
 
 
     def test_list_measurements(self):

@@ -16,8 +16,19 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class MeasurementSerializer(serializers.HyperlinkedModelSerializer):
-    user = serializers.ReadOnlyField(source='user.email')
+    user = serializers.CharField(
+        read_only=True,
+        default=serializers.CurrentUserDefault())
 
     class Meta:
         model = Measurement
-        fields = ('user', 'date', 'height', 'weight')
+        fields = ('id', 'user', 'date', 'height', 'weight')
+
+        validators = [
+            serializers.UniqueTogetherValidator(
+                queryset=Measurement.objects.all(),
+                fields=('user', 'date'),
+                message=("Users may only log a single measurement "
+                         "against any given date.")
+            )
+        ]
