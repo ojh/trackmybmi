@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
 from django.test import TestCase
 
 from users.factories import FriendshipFactory, UserFactory
@@ -20,8 +21,7 @@ class UserTest(TestCase):
         friendship = initiator.initiate_friendship(recipient)
         self.assertEqual(friendship.initiator, initiator)
         self.assertEqual(friendship.recipient, recipient)
-        self.assertTrue(friendship.is_active)
-        self.assertFalse(friendship.is_accepted)
+        self.assertEqual(friendship.status, friendship.PENDING)
 
 
 class FriendshipTest(TestCase):
@@ -35,31 +35,18 @@ class FriendshipTest(TestCase):
 
         self.assertEqual(friendship.__str__(), model_string)
 
-    def test_get_friendship_status(self):
-        pending = FriendshipFactory(is_accepted=False, is_active=True)
-        self.assertTrue(pending.is_pending)
-        self.assertFalse(pending.is_confirmed)
-        self.assertFalse(pending.is_rejected)
-        self.assertFalse(pending.is_ended)
-        self.assertEqual(pending.get_status(), Friendship.PENDING)
+    def test_new_friendship_not_saved_if_similar_one_already_exists(self):
+        initiator = UserFactory()
+        recipient = UserFactory()
+        Friendship.objects.create(initiator=initiator, recipient=recipient)
+        num_friendships = Friendship.objects.count()
 
-        confirmed = FriendshipFactory(is_accepted=True, is_active=True)
-        self.assertFalse(confirmed.is_pending)
-        self.assertTrue(confirmed.is_confirmed)
-        self.assertFalse(confirmed.is_rejected)
-        self.assertFalse(confirmed.is_ended)
-        self.assertEqual(confirmed.get_status(), Friendship.CONFIRMED)
+        Friendship.objects.create(initiator=initiator, recipient=recipient)
+        self.assertEqual(Friendship.objects.count(), num_friendships)
 
-        rejected = FriendshipFactory(is_accepted=False, is_active=False)
-        self.assertFalse(rejected.is_pending)
-        self.assertFalse(rejected.is_confirmed)
-        self.assertTrue(rejected.is_rejected)
-        self.assertFalse(rejected.is_ended)
-        self.assertEqual(rejected.get_status(), Friendship.REJECTED)
+        Friendship.objects.create(initiator=recipient, recipient=initiator)
+        self.assertEqual(Friendship.objects.count(), num_friendships)
 
-        ended = FriendshipFactory(is_accepted=True, is_active=False)
-        self.assertFalse(ended.is_pending)
-        self.assertFalse(ended.is_confirmed)
-        self.assertFalse(ended.is_rejected)
-        self.assertTrue(ended.is_ended)
-        self.assertEqual(ended.get_status(), Friendship.ENDED)
+        new_recipient = UserFactory()
+        Friendship.objects.create(initiator=initiator, recipient=new_recipient)
+        self.assertEqual(Friendship.objects.count(), num_friendships + 1)

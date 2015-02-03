@@ -169,3 +169,16 @@ class MeasurementAPITest(APITestCase):
 
     #~ def test_cannot_delete_measurements_of_friends(self):
         #~ pass
+
+
+#~ class FriendshipAPITest(APITestCase):
+    #~ def test_list_friendships(self):
+        #~ pass
+
+
+    #~ def test_can_create_new_friendship(self):
+        #~ pass
+
+
+    #~ def test_cannot_create_new_friendship_if_similar_one_already_exists(self):
+        #~ pass
