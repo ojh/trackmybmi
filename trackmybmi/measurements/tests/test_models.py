@@ -9,7 +9,7 @@ from users.factories import UserFactory
 
 
 class MeasurementTest(TestCase):
-    def test_string_method(self):
+    def test_model_string(self):
         user = UserFactory(email='test@test.test')
         date = datetime.date(2015, 1, 1)
         measurement = MeasurementFactory(user=user, date=date)
