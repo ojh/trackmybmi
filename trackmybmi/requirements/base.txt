@@ -1,4 +1,4 @@
-Django==1.7.4
+Django==2.2.28
 Markdown==2.5.2
 coverage==3.7.1
 django-custom-user==0.5
